@@ -34,7 +34,12 @@ void Screen::up()
 {   // move cursor_ up one row of screen
 	// do not wrap around
 	if ( row() == 1 ) // at top?
-		cerr << "Screen::up - Cannot wrap around in a vertical direction" << endl;
+		{
+		    //can remove the messages for 4.4
+		    cerr << "Screen::up - Cannot wrap around in a vertical direction" << endl;
+		// wrap around if the cursor_ is at the end of the screen by setting cursor to screen size(end)
+         move(height(),col());
+		}
 	else
 		cursor_ -= width_;
 
@@ -45,7 +50,12 @@ void Screen::down()
 {   // move cursor_ down one row of screen
 	// do not wrap around
 	if ( row() == height_ ) // at bottom?
-		cerr << "Screen::down - Cannot wrap around in a vertical direction" << endl;
+    {
+        cerr << "Screen::down - Cannot wrap around in a vertical direction" << endl;
+        move(1,col());
+
+    }
+
 	else
 		cursor_ += width_;
 
@@ -63,6 +73,76 @@ void Screen::move( string::size_type row, string::size_type col )
 	}
 
 	return;
+}
+
+void Screen::move(Direction dir)
+{
+    switch(dir)
+    {
+    case Direction::HOME:
+        home();
+        break;
+    case Direction::FORWARD :
+        forward();
+        break;
+    case Direction::BACK :
+        back();
+        break;
+    case Direction::UP :
+        up();
+        break;
+    case Direction::DOWN :
+        down();
+        break;
+    case Direction::END :
+        end();
+        break;
+     default:
+        break;
+    }
+
+}
+
+bool Screen::valid(const string::size_type x_square ,const string::size_type y_square , const string::size_type square_side)
+{
+    return (((x_square+square_side)-1<=height()) && ((y_square+square_side)-1<=width()));
+}
+
+//drawing a new square
+void Screen::drawSquare(const string::size_type x_square ,const string::size_type y_square , const string::size_type square_side)
+{
+    if(valid(x_square, y_square,square_side))
+    {
+        move(x_square, y_square);
+        for(int i=0; i< square_side; i++)
+        {
+            set("*");
+            move(Direction::FORWARD);
+        }
+        move(Direction::BACK);
+
+        for(int i=0; i< square_side; i++)
+        {
+            set("*");
+            move(Direction::DOWN);
+        }
+        move(Direction::UP);
+
+        for(int i=0; i< square_side; i++)
+        {
+            set("*");
+            move(Direction::BACK);
+        }
+         move(Direction::FORWARD);
+
+         for(int i=0; i< square_side; i++)
+        {
+            set("*");
+            move(Direction::UP);
+        }
+         move(Direction::DOWN);
+    }
+
 }
 
 char Screen::get( string::size_type row, string::size_type col )
@@ -176,3 +256,8 @@ string::size_type Screen::row() const
 	return (cursor_ + width_)/width_;
 }
 
+//getting col
+string::size_type Screen::col() const
+{   // return current col
+	return ((cursor_ + width_)%width_)+1;
+}

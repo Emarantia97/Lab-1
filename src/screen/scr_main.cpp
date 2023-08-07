@@ -6,16 +6,21 @@ using namespace std;
 
 int main()
 {
-	auto myScreen = Screen{6,6};
-	myScreen.forward();
-	myScreen.set('*');
-	myScreen.down();
-	myScreen.set('*');
-	myScreen.move(3,3);
-	myScreen.set("---");
+	auto myScreen = Screen{6,6}; //create screen
+	myScreen.forward(); //move cursor
+	myScreen.set('*'); //draw
+	myScreen.down();    //move down
+	myScreen.set('*');  //draw
+	myScreen.move(3,3); //move to certain position
+	myScreen.set("---");    //draw
 
-	myScreen.display();
+	myScreen.display(); //display
 	cout << endl;
+
+	auto squareScreen = Screen{10,10}; //create screen
+	squareScreen.drawSquare(7,7,7);
+
+	squareScreen.display();
 
 	myScreen.reSize(16,16);
 	myScreen.display();

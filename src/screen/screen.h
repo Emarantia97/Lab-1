@@ -12,6 +12,18 @@ using namespace std;
 // *size* of any string that can be held by the string class as well as any index into
 // the string.
 
+//strongly typed enum definition
+
+enum class Direction
+{
+    HOME,
+    FORWARD,
+    BACK,
+    UP,
+    DOWN,
+    END
+};
+
 class Screen {
 public:
 	// Screen's constructor
@@ -37,6 +49,9 @@ public:
 	// move the cursor to the specified row and column
 	void move(string::size_type row, string::size_type col);
 
+	//overloading move function
+	void move(Direction dir);
+
 	// get the character at the cursor's current position
 	char get() const { return _screen[cursor_]; }
 	// get the character at the specified row and column
@@ -56,11 +71,15 @@ public:
 	// check whether the specified co-ordinates lie within the screen
 	bool checkRange(string::size_type row, string::size_type col) const;
 
+    bool valid(const string::size_type x_square, const string::size_type y_square , const string::size_type square_side);
+
+    void drawSquare(const string::size_type x_square ,const string::size_type y_square , const string::size_type square_side );
+
 private:
 	// constants
 	// 0 represents the top-left screen element
 	const string::size_type TOP_LEFT = 0;
-	
+
 	// private member functions
 	string::size_type remainingSpace() const;
 	string::size_type row() const;
@@ -71,11 +90,14 @@ private:
 	// number of Screen rows
 	string::size_type height_;
 	// number of Screen columns
-	string::size_type width_;	
+	string::size_type width_;
 	// default position of the Screen's cursor, use in-class initilisation
 	string::size_type cursor_ = TOP_LEFT;
 	// the Screen's data is stored as a string
 	string _screen;
+
+	// col position of cursor
+	 string::size_type col() const;
 };
 
 
